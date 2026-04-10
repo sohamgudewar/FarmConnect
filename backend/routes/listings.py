@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import SessionLocal
-from models.listing import Listing
-from schemas.listing import ListingCreate
+from backend.database import SessionLocal
+from backend.models.listing import Listing
+from backend.models.user import User
+from backend.schemas.listing import ListingCreate
+from backend.routes.auth import get_current_user
 
-router = APIRouter(prefix="/api", tags=["Listings"])
+router = APIRouter(tags=["Listings"])
 
 
 def get_db():
@@ -18,10 +20,10 @@ def get_db():
 @router.post("/listings")
 def create_listing(
     listing: ListingCreate,
-    user_id: int,   # 👈 pass from frontend for now
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    db_listing = Listing(**listing.model_dump(), owner_id=user_id)
+    db_listing = Listing(**listing.model_dump(), owner_id=current_user.id)
     db.add(db_listing)
     db.commit()
     db.refresh(db_listing)
