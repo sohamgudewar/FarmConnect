@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import JWTError, jwt
 
+
 # Use environment variables for sensitive data!
 SECRET_KEY = os.getenv("SECRET_KEY", "your-fallback-secret-key-replace-in-production")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")

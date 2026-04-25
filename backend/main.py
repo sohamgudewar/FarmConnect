@@ -1,7 +1,8 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from backend.database import engine, Base
-from backend.routes import auth, listings
+from backend.routes import auth, listings, prices
+from backend.models import market_price  # Ensure model is loaded for migrations
 import logging
 
 # Configure logging
@@ -33,6 +34,7 @@ app = FastAPI(
 # Register routers
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(listings.router, prefix="/api", tags=["Listings"])
+app.include_router(prices.router, prefix="/api", tags=["Market Prices"])
 
 @app.get("/")
 def root():

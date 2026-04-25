@@ -13,3 +13,12 @@ class Listing(Base):
     contact = Column(String)
 
     owner_id = Column(Integer, ForeignKey("users.id"))
+
+class AdditionalInfo(Base):
+    __tablename__ = "additional_info"
+
+    id = Column(Integer, primary_key=True, index=True)
+    listing_id = Column(Integer, ForeignKey("listings.id"))
+    soil_type = Column(String)
+    irrigation_method = Column(String)
+    fertilizer_used = Column(String)
