@@ -39,3 +39,8 @@ app.include_router(prices.router, prefix="/api", tags=["Market Prices"])
 @app.get("/")
 def root():
     return {"message": "FarmConnect API running 🚀"}
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}

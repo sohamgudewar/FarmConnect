@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 OGD_API_KEY = os.getenv("OGD_API_KEY", "YOUR_API_KEY_HERE")
 AGMARKNET_RESOURCE_ID = "9ef273d1-c142-454d-8061-cff5884610b1"
 BASE_URL = "https://api.data.gov.in/resource/"
-
+0
 def fetch_and_sync_prices(db: Session, district: str = None):
     """
     Fetches latest prices from Agmarknet API and syncs with local database.
