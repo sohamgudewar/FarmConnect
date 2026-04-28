@@ -9,10 +9,9 @@ logger = logging.getLogger(__name__)
 
 # Data.gov.in API configuration
 # Get your API key from https://data.gov.in/
-OGD_API_KEY = os.getenv("OGD_API_KEY", "579b464db66ec23bdd0000013fa08e0740ae488266ae2ff9f181553c")
-AGMARKNET_RESOURCE_ID = "9ef273d1-c142-454d-8061-cff5884610b1"
+OGD_API_KEY = os.getenv("OGD_API_KEY")
+AGMARKNET_RESOURCE_ID =os.getenv("AGMARKNET_ID")
 BASE_URL = "https://api.data.gov.in/resource/"
-0
 
 
 def fetch_and_sync_prices(db: Session, district: str = None):
@@ -27,20 +26,20 @@ def fetch_and_sync_prices(db: Session, district: str = None):
         "limit": 100,
         "filters[state]": "Maharashtra"
     }
-    
+
     if district:
         params["filters[district]"] = district
 
     url = f"{BASE_URL}{AGMARKNET_RESOURCE_ID}"
-    
+
     try:
         response = requests.get(url, params=params)
         response.raise_for_status()
         data = response.json()
-        
+
         records = data.get("records", [])
         sync_count = 0
-        
+
         for record in records:
             # Create or Update logic (Upsert)
             # We identify a unique record by market, commodity, variety, and arrival_date
@@ -50,7 +49,7 @@ def fetch_and_sync_prices(db: Session, district: str = None):
                 MarketPrice.variety == record["variety"],
                 MarketPrice.arrival_date == record["arrival_date"]
             ).first()
-            
+
             if existing:
                 existing.min_price = int(record["min_price"])
                 existing.max_price = int(record["max_price"])
@@ -70,7 +69,7 @@ def fetch_and_sync_prices(db: Session, district: str = None):
                 )
                 db.add(new_price)
             sync_count += 1
-            
+
         db.commit()
         logger.info(f"Successfully synced {sync_count} market price records.")
         return sync_count
@@ -79,6 +78,7 @@ def fetch_and_sync_prices(db: Session, district: str = None):
         logger.error(f"Error syncing prices: {e}")
         db.rollback()
         return 0
+
 
 def get_mock_maharashtra_data(db: Session):
     """
@@ -90,7 +90,7 @@ def get_mock_maharashtra_data(db: Session):
         {"market": "Nagpur", "district": "Nagpur", "commodity": "Orange", "variety": "Mandarin", "min_price": 3000, "max_price": 4500, "modal_price": 4000, "arrival_date": "25/04/2026"},
         {"market": "Amravati", "district": "Amravati", "commodity": "Cotton", "variety": "Other", "min_price": 6500, "max_price": 7200, "modal_price": 6900, "arrival_date": "25/04/2026"}
     ]
-    
+
     for item in mock_data:
         new_price = MarketPrice(
             state="Maharashtra",
@@ -104,6 +104,6 @@ def get_mock_maharashtra_data(db: Session):
             arrival_date=item["arrival_date"]
         )
         db.add(new_price)
-    
+
     db.commit()
     return len(mock_data)
