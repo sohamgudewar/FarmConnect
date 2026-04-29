@@ -7,7 +7,7 @@ import os
 load_dotenv()
 
 from backend.database import engine, Base
-from backend.routes import auth, listings, prices
+from backend.routes import auth, listings, prices, weather, analysis
 from backend.models import market_price  # Ensure model is loaded for migrations
 import logging
 
@@ -43,6 +43,8 @@ app = FastAPI(
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(listings.router, prefix="/api", tags=["Listings"])
 app.include_router(prices.router, prefix="/api", tags=["Market Prices"])
+app.include_router(weather.router, prefix="/api", tags=["Weather"])
+app.include_router(analysis.router, prefix="/api", tags=["Analysis"])
 
 
 @app.get("/")

@@ -30,12 +30,13 @@ def test_market_price_logic():
     print("Testing Filter logic...")
     onion = db.query(MarketPrice).filter(MarketPrice.commodity == "Onion").first()
     assert onion.market == "Lasalgaon"
-    
+
     print("All internal logic tests passed! (API sync skipped due to key requirement)")
-    
+
     db.close()
     # Cleanup
     os.remove("./test_temp.db")
+
 
 if __name__ == "__main__":
     test_market_price_logic()
