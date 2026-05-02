@@ -5,6 +5,7 @@ from backend.models.listing import Listing
 from backend.models.user import User
 from backend.schemas.listing import ListingCreate
 from backend.routes.auth import get_current_user
+from backend.services.maps_service import maps_service
 
 router = APIRouter(tags=["Listings"])
 
@@ -23,7 +24,15 @@ def create_listing(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    db_listing = Listing(**listing.model_dump(), owner_id=current_user.id)
+    listing_data = listing.model_dump()
+    
+    # Auto-geocode if coordinates are missing
+    if listing_data.get("latitude") is None or listing_data.get("longitude") is None:
+        coords = maps_service.geocode_address(listing_data["location"])
+        if coords:
+            listing_data["latitude"], listing_data["longitude"] = coords
+
+    db_listing = Listing(**listing_data, owner_id=current_user.id)
     db.add(db_listing)
     db.commit()
     db.refresh(db_listing)

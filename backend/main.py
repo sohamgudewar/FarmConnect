@@ -7,7 +7,7 @@ import os
 load_dotenv()
 
 from backend.database import engine, Base
-from backend.routes import auth, listings, prices, weather, analysis
+from backend.routes import auth, listings, prices, weather, analysis, location
 from backend.models import market_price  # Ensure model is loaded for migrations
 import logging
 
@@ -45,6 +45,7 @@ app.include_router(listings.router, prefix="/api", tags=["Listings"])
 app.include_router(prices.router, prefix="/api", tags=["Market Prices"])
 app.include_router(weather.router, prefix="/api", tags=["Weather"])
 app.include_router(analysis.router, prefix="/api", tags=["Analysis"])
+app.include_router(location.router, prefix="/api/location", tags=["Location"])
 
 
 @app.get("/")

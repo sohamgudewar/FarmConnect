@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from backend.database import Base
 
 
@@ -10,6 +10,8 @@ class Listing(Base):
     quantity = Column(String)
     price = Column(String)
     location = Column(String)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
     contact = Column(String)
 
     owner_id = Column(Integer, ForeignKey("users.id"))
