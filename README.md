@@ -1,11 +1,17 @@
 # FarmConnect
 
-FarmConnect appears to be a backend system for a platform or marketplace connecting users in the farming sector.
+FarmConnect is a FastAPI backend prototype for a farming marketplace and advisory application. This description is based on the checked-in route and service code.
 
-## Core Features (inferred from structure):
-*   **User Management:** Accounts, authentication, and authorization for users.
-*   **Listing Management:** Functionality for users to create, view, update, and delete various types of "listings." These listings could potentially include farm produce, equipment, services, or other farm-related items.
-*   **API-Driven:** The `routes` directory suggests it exposes an API for interaction with a frontend (which is not part of this backend).
-*   **Database Integration:** `database.py` indicates data persistence, likely for user and listing information.
+## Implemented route groups
 
-The application is built using Python, as evidenced by the virtual environment directories (`.venv`, `venv`) and `.py` files. It likely serves as the foundational API for a web or mobile application focused on connecting the farming community.
+* **Accounts:** registration and JWT login.
+* **Listings:** create and list marketplace entries; full update/delete CRUD is not implemented.
+* **Market prices:** list and sync price records. When the external API is unavailable or unconfigured, the sync route deliberately inserts mock Maharashtra data.
+* **Location and weather:** nearby-place/listing and weather endpoints backed by service adapters.
+* **Advisory:** disease-image and market-advisory endpoints.
+
+## Limitations
+
+This repository contains no frontend, production deployment configuration, or comprehensive automated test suite. `tests/__init__.py` contains null bytes in the audited revision, so a whole-tree Python compilation check fails until that file is repaired. Its default JWT secret is a development placeholder. External-data results depend on environment configuration, and mock market data must not be described as real-time market demand.
+
+The application uses Python, FastAPI, SQLAlchemy, and a local SQLite default. Run the generated OpenAPI page to inspect the exact current request and response contracts.
